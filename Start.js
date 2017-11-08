@@ -24,7 +24,7 @@ Client.on( "message", Message => {
 		cmc.getTicker({limit: 1, currency: 'shield-coin'}).then(jsonf => {
 			console.log(jsonf);
 			var jsons = jsonf[0];
-			Message.channel.sendMessage("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\nPrice: $" + jsons["price_usd"] + "\n        " + jsons["price_btc"] + "BTC");
+			Message.channel.sendMessage("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\nPrice: $" + jsons["price_usd"] + "\n            " + jsons["price_btc"] + "BTC");
       			info_last = new Date().getTime();
 		}).catch(console.error)
     	}
