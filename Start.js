@@ -3,7 +3,8 @@
 const Discord = require( "discord.js" );
 const Client = new Discord.Client( );
 const https = require('https');
-const cmc = new require('coinmarketcap-api')();
+var cmca = require('coinmarketcap-api');
+var cmc = new cmca();
 
 Client.on( "ready", ( ) => {
 	//console.log( "ColorChange bot has been started!" );
