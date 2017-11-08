@@ -4,6 +4,13 @@ const Discord = require( "discord.js" );
 const Client = new Discord.Client( );
 const https = require('https');
 
+var optionsget = {
+    host : 'api.coinmarketcap.com', 
+    port : 443,
+    path : '/v1/ticker/bitcoin/', 
+    method : 'GET'
+};
+
 
 Client.on( "ready", ( ) => {
 	//console.log( "ColorChange bot has been started!" );
@@ -20,13 +27,7 @@ Client.on( "message", Message => {
 		return;
     
     if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
-        https.request({
-	 hostname: 'api.coinmarketcap.com',
-	 port: 443,
-	 path: '/v1/ticker/shield-coin/',
-	 method: 'GET',
-	 json: true
-	}, function(error, response, body){
+        https.request(optionsget, function(error, response, body){
             if (error) console.log(error);
             else console.log(body);
             var jsons = JSON.parse(body);
