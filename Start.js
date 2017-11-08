@@ -20,7 +20,7 @@ Client.on( "message", Message => {
     
     if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
         http.request({
-	  uri: "https://api.coinmarketcap.com/v1/ticker/shield-coin/,
+	  uri: "https://api.coinmarketcap.com/v1/ticker/shield-coin/",
 	  method: "GET",
 	  timeout: 5000,
 	  followRedirect: true,
