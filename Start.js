@@ -21,9 +21,10 @@ Client.on( "message", Message => {
 		return;
     
     	if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
-		cmc.getTicker({limit: 1, currency: 'shield-coin'}).then(jsons => {
-			console.log(jsons);
-			Message.channel.send("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\n Price: $" + jsons["price_usd"] + "/" + jsons["price_btc"] + "BTC");
+		cmc.getTicker({limit: 1, currency: 'shield-coin'}).then(jsonf => {
+			console.log(jsonf);
+			var jsons = jsonf[0];
+			Message.channel.sendMessage("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\n Price: $" + jsons["price_usd"] + "/" + jsons["price_btc"] + "BTC");
       			info_last = new Date().getTime();
 		}).catch(console.error)
     	}
