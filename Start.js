@@ -2,7 +2,8 @@
 
 const Discord = require( "discord.js" );
 const Client = new Discord.Client( );
-var http = require("http");
+const https = require('https');
+
 
 Client.on( "ready", ( ) => {
 	//console.log( "ColorChange bot has been started!" );
@@ -19,8 +20,9 @@ Client.on( "message", Message => {
 		return;
     
     if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
-        http.request({
+        https.request({
 	  uri: "https://api.coinmarketcap.com/v1/ticker/shield-coin/",
+	  port: 443,
 	  method: "GET",
 	  timeout: 5000,
 	  followRedirect: true,
