@@ -5,11 +5,11 @@ const Client = new Discord.Client( );
 var http = require("http");
 
 Client.on( "ready", ( ) => {
-	console.log( "ColorChange bot has been started!" );
+	//console.log( "ColorChange bot has been started!" );
 	//Client.user.setGame( "SHIELDbot" );
 	Client.user.setStatus("online");
-	var channel = Client.channels.get('General');
-  	channel.sendMessage("Back online! again..");
+	//var channel = Client.channels.get('general');
+  	//channel.sendMessage("Back online! again..");
 } );
 
 var info_last = 0;
