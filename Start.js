@@ -3,14 +3,7 @@
 const Discord = require( "discord.js" );
 const Client = new Discord.Client( );
 const https = require('https');
-
-var optionsget = {
-    host : 'api.coinmarketcap.com', 
-    port : 443,
-    path : '/v1/ticker/bitcoin/', 
-    method : 'GET'
-};
-
+const cmc = new require('coinmarketcap-api')();
 
 Client.on( "ready", ( ) => {
 	//console.log( "ColorChange bot has been started!" );
@@ -26,15 +19,12 @@ Client.on( "message", Message => {
 	if( Message.author.bot )
 		return;
     
-    if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
-        https.request(optionsget, function(error, response, body){
-            if (error) console.log(error);
-            else console.log(body);
-            var jsons = JSON.parse(body);
-            Message.channel.send("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\n Price: $" + jsons["price_usd"] + "/" + jsons["price_btc"] + "BTC");
-            info_last = new Date().getTime();
-	});
-    }
+    	if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
+		cmc.getTicker({limit: 1, currency: 'shield-coin'}).then(console.log).catch(console.error)
+   		Message.channel.send("Volume: " + jsons["24h_volume_usd"] + "\nRank: " + jsons["rank"] + "\n Price: $" + jsons["price_usd"] + "/" + jsons["price_btc"] + "BTC");
+      		info_last = new Date().getTime();
+
+    	}
     
 	/*if( Message.content.toLowerCase( ).startsWith( "$color" ) && ( Message.channel.type == "text" ) ) {
 		let szArguments = Message.content.toLowerCase( ).split( " " ).slice( 1 );
