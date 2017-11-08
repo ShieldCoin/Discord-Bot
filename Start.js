@@ -21,7 +21,7 @@ Client.on( "message", Message => {
     if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 5)){ //wait five minutes interval at least
         http.request({
             hostname: 'api.coinmarketcap.com',
-            port: 80,
+            port: 443,
             path: '/v1/ticker/shield-coin/',
             method: 'GET',
             json:true
