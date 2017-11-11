@@ -21,7 +21,7 @@ Client.on( "message", Message => {
 		return;
     
     	if(Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1)){ //wait five minutes interval at least
-		cmc.getTicker({limit: 1, currency: 'shield-coin'}).then(jsonf => {
+		cmc.getTicker({limit: 1, currency: 'shield-xsh'}).then(jsonf => {
 			console.log(jsonf);
 			var jsons = jsonf[0];
 			Message.channel.sendMessage("Change: " + jsons["percent_change_24h"] +"%\nVolume: " + jsons["24h_volume_usd"] + "$\nRank: " + jsons["rank"] + "\nPrice: " + jsons["price_usd"] + "$\n            " + jsons["price_btc"] + "BTC");
