@@ -348,7 +348,8 @@ Client.on("message", Message => {
 									"!withdraw <amount> <address> withdraws XSH\n" +
 									"!donate <amount> donates XSH to the team\n"+
 									"!balance shows you balance\n"+
-									"!chance play's chance can win or lose 50XSH\n");
+									"!chance play's chance can win or lose 50XSH\n"+ 
+									"!hashprofit <Hashrate in Mh> <algo> profit per algo/hashrate");
 	}
 });
 
