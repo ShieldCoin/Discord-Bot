@@ -66,6 +66,7 @@ function GetNewAddress() {
 function GetFromUID(uid) {
 	return new Promise(function (resolve, reject) {
 		db.find().make(function (filter) {
+			filter.first();
 			filter.where('uid', '=', uid);
 			filter.callback(function (err, response) {
 				if (err) {
