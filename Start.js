@@ -238,6 +238,8 @@ Client.on("message", Message => {
 					Message.channel.sendMessage("Not enough balance (50XSH needed)");
 				}
 			});
+		}).catch(x =>{
+			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
 		});
 	}
 
