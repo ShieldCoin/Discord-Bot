@@ -1,0 +1,27 @@
+{
+  "name": "SHIELDbot",
+  "version": "0.0.2",
+  "description": "Discord SHIELD bot",
+  "keywords": [
+    "Shield",
+    "XSH"
+  ],
+  "repository": "git://github.com/shieldcoin/Discord-Bot.git",
+  "author": "SHIELD <shieldcoin@protonmail.com>",
+  "main": "Start.js",
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nodeunit": "*",
+    "sinon": "^4.1.2"
+  },
+  "dependencies": {
+    "nosql": "6.1.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
