@@ -2,7 +2,6 @@
 
 const Discord = require("discord.js"); //9.3.1
 const Client = new Discord.Client();
-const https = require('https');
 const nosql = require("nosql");
 const shield = require("./lib/shield")();
 var db = nosql.load("uid.nosql");
@@ -10,6 +9,7 @@ var db = nosql.load("uid.nosql");
 var cmca = require('coinmarketcap-api');
 var cmc = new cmca();
 
+const algos = ["x17", "scrypt", "groestl", "lyra2re", "blake"];
 var collectorAddr = "SHIELDADDRESS"; //must be on the same wallet
 shield.auth('Macintyre, John', 'mypassword');
 
@@ -295,6 +295,42 @@ Client.on("message", Message => {
 			}).catch(x => {
 				Message.channel.sendMessage("Failed to withdraw funds");
 				console.log(x);
+			});
+		}
+	}
+	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
+		if (Message.content.split(" ").Length !== 3) {
+			var amount = Number(Message.content.split(" ")[1]);
+			var hashsize = Message.content.split(" ")[2];
+			var algo = Message.content.split(" ")[3];
+			hashsize = hashsize.toLowerCase();
+
+			if (amount == undefined || isNaN(amount)) {
+				Message.channel.sendMessage("Use !hashprofit <hashrate> <algo> (e.g. 40 Mh, 40 h, 40 Gh)");
+				return;
+			}
+			hashsize = hashsize.replace('h', ' ');
+			var hashorders = ["", "k", "m", "g", "t"];
+			var hashorder = hashorders.indexOf(hashsize);
+			if(hashorder < 0 || hashorder > hashorders.Length -1){
+				Message.channel.sendMessage("Use !hashprofit <hashrate> <algo> (e.g. 40 Mh, 40 h, 40 Gh)");
+				return;
+			}
+			if(algos.indexOf(algo) < 0){
+				Message.channel.sendMessage("Choose on of the algo's scrypt, groestl, lyra2re, blake");
+				return;
+			}
+
+			shield.getinfo(function(err, response){
+				if(err){
+					console.log(err);
+					Message.channel.sendMessage("Internal Server error");
+					return;
+				}
+				var getinfo = JSON.parse(response);
+				XSHph = (Math.pow(10, hashorder) * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
+				Message.channel.sendMessage("With that hashrate/algo it's estimated at " + String(XSHph) +"XSH/h");
+				return;
 			});
 		}
 	}
