@@ -71,7 +71,7 @@ function GetFromUID(uid) {
 				if (err) {
 					reject(err);
 				} else {
-					if(response["uid"] === undefined){
+					if(response === undefined){
 						reject(0);
 					}
 					resolve(response);
