@@ -297,7 +297,7 @@ Client.on("message", Message => {
 		}
 	}
 
-	if (Message.content.toLowerCase().startsWith("!withdraw")) {
+	if (Message.content.toLowerCase().startsWith("!help")) {
 		Message.channel.sendMessage("!deposit gets your deposit address\n" +
 									"!withdraw <amount> <address> withdraws XSH\n" +
 									"!donate <amount> donates XSH to the team\n"+
