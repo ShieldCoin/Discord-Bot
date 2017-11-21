@@ -204,7 +204,7 @@ Client.on("message", Message => {
 		}).then(jsonf => {
 			console.log(jsonf);
 			var jsons = jsonf[0];
-			Message.channel.sendMessage("XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: " +	jsons["24h_volume_usd"] + "$ || Rank: " + jsons["rank"] );
+			Message.channel.sendMessage("XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: $" +	jsons["24h_volume_usd"] + " || Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
 		}).catch(console.error)
 	}
