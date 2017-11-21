@@ -40,7 +40,7 @@ function UpdateDeposits() {
 
 }
 
-setInterval(UpdateDeposits, 60 * 1000); //every 60 sec
+setInterval(UpdateDeposits, 30 * 1000); //every 30 sec
 //FIXME:Round Down when upgrading balances
 function GetNewAddress() {
 	return new Promise(function (resolve, reject) {
@@ -122,13 +122,18 @@ function WithdrawBalance(uid, address, amount) {
 		GetBalance(uid).then(balance =>{
 			if(balance > amount){
 				balance -= 0.05; //Tx fee
-				console.log("withdrawing",address,balance)
-				shield.exec("sendToAddress", address, balance, function(err,balance){
+				console.log("withdrawing",address,amount)
+				shield.exec("sendToAddress", address, amount, function(err,txid){
 					if(err){
 						reject(err);
 						return;
 					}
-					resolve(balance);
+					GetBalance(uid).then(balance => {
+						GetBalance("MainAddr").then(Mainbalance => {		
+							UpdateBalance(uid, balance - amount);
+						});
+					});
+					resolve(txid);
 				});
 			}
 		}).catch(err => {
@@ -288,7 +293,7 @@ Client.on("message", Message => {
 			}
 
 			WithdrawBalance(Message.author.id, address, amount).then(x => {
-				Message.channel.sendMessage("Succesfully withdrawed " + String(x) + "XSH");
+				Message.channel.sendMessage("Succesfully withdrawed " + String(x));
 			}).catch(x => {
 				Message.channel.sendMessage("Failed to withdraw funds");
 				console.log(x);
