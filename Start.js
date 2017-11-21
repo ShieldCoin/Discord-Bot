@@ -4,7 +4,7 @@ const Discord = require("discord.js"); //9.3.1
 const Client = new Discord.Client();
 const https = require('https');
 const nosql = require("nosql");
-const shield = require("./lib/shield");
+const shield = require("./lib/shield")();
 var db = nosql.load("uid.nosql");
 
 var cmca = require('coinmarketcap-api');
@@ -67,11 +67,13 @@ function GetFromUID(uid) {
 	return new Promise(function (resolve, reject) {
 		db.find().make(function (filter) {
 			filter.where('uid', '=', uid);
-			filter.where("deposit_address", "!=", undefined)
 			filter.callback(function (err, response) {
 				if (err) {
 					reject(err);
 				} else {
+					if(response === undefined){
+						reject(0);
+					}
 					resolve(response);
 				}
 			});
