@@ -320,7 +320,7 @@ Client.on("message", Message => {
 					return;
 				}
 				var getinfo = response;
-				XSHph = (Math.pow(10, hashorder) * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
+				XSHph = (1000000 * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
 				Message.channel.sendMessage("With that hashrate/algo it's estimated at " + String(XSHph) +"XSH/h");
 				return;
 			});
