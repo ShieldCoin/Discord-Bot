@@ -204,9 +204,7 @@ Client.on("message", Message => {
 		}).then(jsonf => {
 			console.log(jsonf);
 			var jsons = jsonf[0];
-			Message.channel.sendMessage("Change: " + jsons["percent_change_24h"] + "%\nVolume: " +
-				jsons["24h_volume_usd"] + "$\nRank: " + jsons["rank"] + "\nPrice: " + jsons["price_usd"] + "$\n            " +
-				jsons["price_btc"] + "BTC");
+			Message.channel.sendMessage("XSH || " + jsons["price_btc"] + "BTC || " + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: " +	jsons["24h_volume_usd"] + "$ || Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
 		}).catch(console.error)
 	}
@@ -298,7 +296,8 @@ Client.on("message", Message => {
 	}
 
 	if (Message.content.toLowerCase().startsWith("!help")) {
-		Message.channel.sendMessage("!deposit gets your deposit address\n" +
+		Message.channel.sendMessage("!info shows the latest data on XSH\n" +
+									"!deposit gets your deposit address\n" +
 									"!withdraw <amount> <address> withdraws XSH\n" +
 									"!donate <amount> donates XSH to the team\n"+
 									"!balance shows you balance\n"+
