@@ -40,7 +40,7 @@ function UpdateDeposits() {
 
 }
 
-setInterval(60 * 1000, UpdateDeposits); //every 60 sec
+setInterval(UpdateDeposits, 60 * 1000); //every 60 sec
 //FIXME:Round Down when upgrading balances
 function GetNewAddress() {
 	return new Promise(function (resolve, reject) {
@@ -67,7 +67,7 @@ function GetFromUID(uid) {
 	return new Promise(function (resolve, reject) {
 		db.find().make(function (filter) {
 			filter.where('uid', '=', uid);
-			filter.contains("deposit_address")
+			filter.where("deposit_address", "!=", undefined)
 			filter.callback(function (err, response) {
 				if (err) {
 					reject(err);
