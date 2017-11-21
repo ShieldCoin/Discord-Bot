@@ -321,7 +321,7 @@ Client.on("message", Message => {
 				}
 				var getinfo = response;
 				XSHph = (1000000 * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
-				Message.channel.sendMessage("With that hashrate/algo it's estimated at " + String((XSHph).toFixed(2)) +"XSH/h");
+				Message.channel.sendMessage("Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d");
 				return;
 			});
 		}
