@@ -122,7 +122,8 @@ function WithdrawBalance(uid, address, amount) {
 		GetBalance(uid).then(balance =>{
 			if(balance > amount){
 				balance -= 0.05; //Tx fee
-				shield.sendToAddress(address + " " + balance, function(err,balance){
+				console.log("withdrawing",address,balance)
+				shield.exec("sendToAddress", address, balance, function(err,balance){
 					if(err){
 						reject(err);
 						return;
