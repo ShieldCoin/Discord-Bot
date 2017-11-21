@@ -71,7 +71,7 @@ function GetFromUID(uid) {
 				if (err) {
 					reject(err);
 				} else {
-					if(response === undefined){
+					if(response["uid"] === undefined){
 						reject(0);
 					}
 					resolve(response);
@@ -85,7 +85,7 @@ function GetFromUID(uid) {
 function GetDepositAddress(uid) {
 	return new Promise(function (resolve, reject) {
 		GetFromUID(uid).then(x => {
-			resolve(response["deposit_address"]);
+			resolve(x["deposit_address"]);
 		}).catch(err => {
 			reject(err);
 		});
@@ -107,7 +107,7 @@ function UpdateBalance(uid, newBalance) {
 function GetBalance(uid) {
 	return new Promise(function (resolve, reject) {
 		GetFromUID(uid).then(x => {
-			resolve(response["balance"]);
+			resolve(x["balance"]);
 		}).catch(err => {
 			reject(err);
 		});
@@ -208,6 +208,7 @@ Client.on("message", Message => {
 		GetFromUID(Message.author.id).then(user => {
 			Message.channel.sendMessage("Your deposit address is:" + user["deposit_address"]);
 		}).catch(err => {
+			console.log(err);
 			AddNewUser(Message.author.id).then(addr => {
 				Message.channel.sendMessage("Your deposit address is: " + addr);
 			});
@@ -236,7 +237,11 @@ Client.on("message", Message => {
 	}
 
 	if (Message.content.toLowerCase().startsWith("!balance")) {
-		Message.channel.sendMessage("You have: " + String(GetBalance(Message.author.id)) + "XSH");
+		GetBalance(Message.author.id).then(x =>{
+			Message.channel.sendMessage("You have: " + String(x) + "XSH");
+		}).catch(x=>{
+			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
+		});
 	}
 
 
