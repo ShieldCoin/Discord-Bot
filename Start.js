@@ -121,7 +121,7 @@ function WithdrawBalance(uid, address, amount) {
 	return new Promise(function (resolve, reject) {
 		GetBalance(uid).then(balance =>{
 			if(balance > amount){
-				balance -= 0.05; //Tx fee
+				amount -= 0.05; //Tx fee
 				console.log("withdrawing",address,amount)
 				shield.exec("sendToAddress", address, amount, function(err,txid){
 					if(err){
@@ -254,7 +254,7 @@ Client.on("message", Message => {
 
 	if(Message.content.toLowerCase().startsWith("!donate")){
 		var amount = Number(Message.content.split(" ")[1]);
-		if (amount === undefined) {
+		if (amount === undefined || amount === NaN || amount === null) {
 			Message.channel.sendMessage("Use !donate <amount>");
 			return;
 		}
@@ -283,11 +283,7 @@ Client.on("message", Message => {
 			var amount = Number(Message.content.split(" ")[1]);
 			var address = Message.content.split(" ")[2];
 
-			if (amount === undefined) {
-				Message.channel.sendMessage("Use !withdraw <amount> <address>");
-				return;
-			}
-			if (address === undefined) {
+			if (amount === undefined || amount === NaN || amount === null) {
 				Message.channel.sendMessage("Use !withdraw <amount> <address>");
 				return;
 			}
