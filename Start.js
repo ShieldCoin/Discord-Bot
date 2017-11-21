@@ -130,7 +130,7 @@ function WithdrawBalance(uid, address, amount) {
 					}
 					GetBalance(uid).then(balance => {
 						GetBalance("MainAddr").then(Mainbalance => {		
-							UpdateBalance(uid, balance - amount);
+							UpdateBalance(uid, balance - (amount + 0.05));
 						});
 					});
 					resolve(txid);
@@ -273,6 +273,8 @@ Client.on("message", Message => {
 					Message.channel.sendMessage("Thanks for the donation.");
 				}
 			});
+		}).catch(x =>{
+			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
 		});
 	}
 
