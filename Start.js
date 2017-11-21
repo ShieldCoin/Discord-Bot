@@ -254,7 +254,7 @@ Client.on("message", Message => {
 
 	if(Message.content.toLowerCase().startsWith("!donate")){
 		var amount = Number(Message.content.split(" ")[1]);
-		if (amount == undefined || typeof(amount) !== 'number') {
+		if (amount == undefined || isNaN(amount)) {
 			Message.channel.sendMessage("Use !donate <amount>");
 			return;
 		}
@@ -283,7 +283,7 @@ Client.on("message", Message => {
 			var amount = Number(Message.content.split(" ")[1]);
 			var address = Message.content.split(" ")[2];
 
-			if (amount == undefined || typeof(amount) !== 'number') {
+			if (amount == undefined || isNaN(amount)) {
 				Message.channel.sendMessage("Use !withdraw <amount> <address>");
 				return;
 			}

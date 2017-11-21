@@ -19,6 +19,8 @@
     "sinon": "^4.1.2"
   },
   "dependencies": {
+    "coinmarketcap-api": "*",
+    "discord.js": "9.3.1",
     "nosql": "6.1.0"
   },
   "scripts": {
