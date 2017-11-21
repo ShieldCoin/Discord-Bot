@@ -319,7 +319,7 @@ Client.on("message", Message => {
 					Message.channel.sendMessage("Internal Server error");
 					return;
 				}
-				var getinfo = JSON.parse(response);
+				var getinfo = response;
 				XSHph = (Math.pow(10, hashorder) * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
 				Message.channel.sendMessage("With that hashrate/algo it's estimated at " + String(XSHph) +"XSH/h");
 				return;
