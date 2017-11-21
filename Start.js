@@ -301,21 +301,13 @@ Client.on("message", Message => {
 	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
 		if (Message.content.split(" ").Length !== 3) {
 			var amount = Number(Message.content.split(" ")[1]);
-			var hashsize = Message.content.split(" ")[2];
-			var algo = Message.content.split(" ")[3];
-			hashsize = hashsize.toLowerCase();
+			var algo = Message.content.split(" ")[2].toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
-				Message.channel.sendMessage("Use !hashprofit <hashrate> <algo> (e.g. 40 Mh, 40 h, 40 Gh)");
+				Message.channel.sendMessage("Use !hashprofit <hashrate in Mh> <algo>");
 				return;
 			}
-			hashsize = hashsize.replace('h', ' ');
-			var hashorders = ["", "k", "m", "g", "t"];
-			var hashorder = hashorders.indexOf(hashsize);
-			if(hashorder < 0 || hashorder > hashorders.Length -1){
-				Message.channel.sendMessage("Use !hashprofit <hashrate> <algo> (e.g. 40 Mh, 40 h, 40 Gh)");
-				return;
-			}
+
 			if(algos.indexOf(algo) < 0){
 				Message.channel.sendMessage("Choose on of the algo's scrypt, groestl, lyra2re, blake");
 				return;
