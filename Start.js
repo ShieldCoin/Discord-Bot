@@ -315,7 +315,7 @@ Client.on("message", Message => {
 	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
 		if (Message.content.split(" ").Length !== 3) {
 			var amount = Number(Message.content.split(" ")[1]);
-			var algo = Message.content.split(" ")[2].toLowerCase();
+			var algo = String(Message.content.split(" ")[2]).toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
 				Message.channel.sendMessage("Use !hashprofit <hashrate in Mh> <algo>");
