@@ -13,24 +13,7 @@ const algos = ["x17", "scrypt", "groestl", "lyra2re", "blake"];
 var collectorAddr = "SHIELDADDRESS"; //must be on the same wallet
 shield.auth('Macintyre, John', 'mypassword');
 
-var jsonf;
-
-cmc.getTicker({
-	limit: 1,
-	currency: 'shield-xsh'
-}).then(x => {
-	jsonf = x;
-}).catch(console.error)
-
-function Update() {
-
-	cmc.getTicker({
-		limit: 1,
-		currency: 'shield-xsh'
-	}).then(x => {
-		jsonf = x;
-	}).catch(console.error);
-
+function UpdateDeposits() {
 	db.find().make(function (builder) { //Get All users
 		builder.callback(function (err, response) {
 			response.forEach(function (element) { //Iterate through them
@@ -57,7 +40,7 @@ function Update() {
 
 }
 
-setInterval(Update, 30 * 1000); //every 30 sec
+setInterval(UpdateDeposits, 30 * 1000); //every 30 sec
 //FIXME:Round Down when upgrading balances
 function GetNewAddress() {
 	return new Promise(function (resolve, reject) {
@@ -215,10 +198,15 @@ Client.on("message", Message => {
 		return;
 
 	if (Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
-			//console.log(jsonf);
+		cmc.getTicker({
+			limit: 1,
+			currency: 'shield-xsh'
+		}).then(jsonf => {
+			console.log(jsonf);
 			var jsons = jsonf[0];
 			Message.channel.sendMessage("XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: $" +	jsons["24h_volume_usd"] + " || Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
+		}).catch(console.error)
 	}
 
 	if (Message.content.toLowerCase().startsWith("!deposit") && (Message.channel.type == "text")) {
@@ -333,10 +321,7 @@ Client.on("message", Message => {
 				}
 				var getinfo = response;
 				XSHph = (1000000 * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
-				var jsons = jsonf[0];
-				var pXSH = jsons["price_usd"];
-				Message.channel.sendMessage("Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d || "+
-															String((XSHph * pXSH).toFixed(2)) + " $/h || " +  String((XSHph * pXSH * 24).toFixed(2)) + " $/d");
+				Message.channel.sendMessage("Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d");
 				return;
 			});
 		}
