@@ -296,6 +296,8 @@ Client.on("message", Message => {
 				Message.channel.sendMessage("Failed to withdraw funds");
 				console.log(x);
 			});
+		}else{
+			Message.channel.sendMessage("Use !withdraw <amount> <address>");
 		}
 	}
 	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
@@ -309,7 +311,7 @@ Client.on("message", Message => {
 			}
 
 			if(algos.indexOf(algo) < 0){
-				Message.channel.sendMessage("Choose on of the algo's scrypt, groestl, lyra2re, blake");
+				Message.channel.sendMessage("Choose on of the algo's scrypt, groestl, lyra2re, blake, x17");
 				return;
 			}
 
@@ -324,6 +326,8 @@ Client.on("message", Message => {
 				Message.channel.sendMessage("Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d");
 				return;
 			});
+		}else{
+			Message.channel.sendMessage("Use !hashprofit <hashrate in Mh> <algo>");
 		}
 	}
 
