@@ -10,6 +10,7 @@ var cmca = require('coinmarketcap-api');
 var cmc = new cmca();
 
 const algos = ["x17", "scrypt", "groestl", "lyra2re", "blake"];
+var MessageQueue = [];
 var collectorAddr = "SHIELDADDRESS"; //must be on the same wallet
 shield.auth('Macintyre, John', 'mypassword');
 
@@ -185,6 +186,19 @@ function AddNewUser(uid) {
 	});
 }
 
+function SendMsg(MessageClass, MessageString){
+	MessageClass.channel.sendMessage(MessageString).then(msg =>{
+		MessageQueue.unshift(msg);
+		if(MessageQueue.Length > 5){
+			var ToDelMsg = MessageQueue.pop();
+			ToDelMsg.delete();
+		}
+	}).catch( x =>{
+		console.log("Coulnd't send message");
+	})
+	
+}
+
 GetBalance("MainAddr").then(balance => {
 	console.log("Main balance is:" + String(balance));
 }).catch(x => {
@@ -217,17 +231,17 @@ Client.on("message", Message => {
 	if (Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
 			//console.log(jsonf);
 			var jsons = jsonf[0];
-			Message.channel.sendMessage("XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: $" +	jsons["24h_volume_usd"] + " || Rank: " + jsons["rank"] );
+			SendMsg(Message, "XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: $" +	jsons["24h_volume_usd"] + " || Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
 	}
 
 	if (Message.content.toLowerCase().startsWith("!deposit") && (Message.channel.type == "text")) {
 		GetFromUID(Message.author.id).then(user => {
-			Message.channel.sendMessage("Your deposit address is:" + user["deposit_address"]);
+			SendMsg(Message,"Your deposit address is:" + user["deposit_address"]);
 		}).catch(err => {
 			console.log(err);
 			AddNewUser(Message.author.id).then(addr => {
-				Message.channel.sendMessage("Your deposit address is: " + addr);
+				SendMsg(Message, "Your deposit address is: " + addr);
 			});
 		});
 	}
@@ -238,28 +252,28 @@ Client.on("message", Message => {
 			GetBalance("MainAddr").then(Mainbalance => {
 				if (balance >= 50) {
 					if (RandomNumber() > 0.51) {
-						Message.channel.sendMessage("Chance! you win 50XSH");
+						SendMsg(Message,"Chance! you win 50XSH");
 						UpdateBalance(Message.author.id, balance + 50);
 						UpdateBalance("MainAddr", Mainbalance - 50);
 					} else {
-						Message.channel.sendMessage("Bad luck! Try again next time!");
+						SendMsg(Message,"Bad luck! Try again next time!");
 						UpdateBalance(Message.author.id, balance - 50);
 						UpdateBalance("MainAddr", Mainbalance + 50);
 					}
 				} else {
-					Message.channel.sendMessage("Not enough balance (50XSH needed)");
+					SendMsg(Message,"Not enough balance (50XSH needed)");
 				}
 			});
 		}).catch(x =>{
-			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
 		});
 	}
 
 	if (Message.content.toLowerCase().startsWith("!balance")) {
 		GetBalance(Message.author.id).then(x =>{
-			Message.channel.sendMessage("You have: " + String(x) + "XSH");
+			SendMsg(Message,"You have: " + String(x) + "XSH");
 		}).catch(x=>{
-			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
 		});
 	}
 
@@ -267,11 +281,11 @@ Client.on("message", Message => {
 	if(Message.content.toLowerCase().startsWith("!donate")){
 		var amount = Number(Message.content.split(" ")[1]);
 		if (amount == undefined || isNaN(amount)) {
-			Message.channel.sendMessage("Use !donate <amount>");
+			SendMsg(Message,"Use !donate <amount>");
 			return;
 		}
 		if(amount < 1){
-			Message.channel.sendMessage("Smart ass");
+			SendMsg(Message,"Smart ass");
 			return;
 		}
 		GetBalance(Message.author.id).then(balance => {
@@ -281,14 +295,14 @@ Client.on("message", Message => {
 			UpdateBalance("MainAddr", Mainbalance + amount);
 
 				if (amount > 100000) {
-					Message.channel.sendMessage("Thanks your the donation you can now choose a custom title");
+					SendMsg(Message,"Thanks your the donation you can now choose a custom title");
 					return;
 				}else{
-					Message.channel.sendMessage("Thanks for the donation.");
+					SendMsg(Message,"Thanks for the donation.");
 				}
 			});
 		}).catch(x =>{
-			Message.channel.sendMessage("You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
 		});
 	}
 
@@ -298,18 +312,18 @@ Client.on("message", Message => {
 			var address = Message.content.split(" ")[2];
 
 			if (amount == undefined || isNaN(amount)) {
-				Message.channel.sendMessage("Use !withdraw <amount> <address>");
+				SendMsg(Message,"Use !withdraw <amount> <address>");
 				return;
 			}
 
 			WithdrawBalance(Message.author.id, address, amount).then(x => {
-				Message.channel.sendMessage("Succesfully withdrawed " + String(x));
+				SendMsg(Message,"Succesfully withdrawed " + String(x));
 			}).catch(x => {
-				Message.channel.sendMessage("Failed to withdraw funds");
+				SendMsg(Message,"Failed to withdraw funds");
 				console.log(x);
 			});
 		}else{
-			Message.channel.sendMessage("Use !withdraw <amount> <address>");
+			SendMsg(Message,"Use !withdraw <amount> <address>");
 		}
 	}
 	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
@@ -318,36 +332,36 @@ Client.on("message", Message => {
 			var algo = String(Message.content.split(" ")[2]).toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
-				Message.channel.sendMessage("Use !hashprofit <hashrate in Mh> <algo>");
+				SendMsg(Message,"Use !hashprofit <hashrate in Mh> <algo>");
 				return;
 			}
 
 			if(algos.indexOf(algo) < 0){
-				Message.channel.sendMessage("Choose on of the algo's scrypt, groestl, lyra2re, blake, x17");
+				SendMsg(Message,"Choose on of the algo's scrypt, groestl, lyra2re, blake, x17");
 				return;
 			}
 
 			shield.getinfo(function(err, response){
 				if(err){
 					console.log(err);
-					Message.channel.sendMessage("Internal Server error");
+					SendMsg(Message,"Internal Server error");
 					return;
 				}
 				var getinfo = response;
 				XSHph = (1000000 * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
 				var jsons = jsonf[0];
 				var pXSH = jsons["price_usd"];
-				Message.channel.sendMessage("Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d || "+
+				SendMsg(Message,"Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d || "+
 															String((XSHph * pXSH).toFixed(2)) + " $/h || " +  String((XSHph * pXSH * 24).toFixed(2)) + " $/d");
 				return;
 			});
 		}else{
-			Message.channel.sendMessage("Use !hashprofit <hashrate in Mh> <algo>");
+			SendMsg(Message,"Use !hashprofit <hashrate in Mh> <algo>");
 		}
 	}
 
 	if (Message.content.toLowerCase().startsWith("!help")) {
-		Message.channel.sendMessage("!info shows the latest data on XSH\n" +
+					SendMsg(Message,"!info shows the latest data on XSH\n" +
 									"!deposit gets your deposit address\n" +
 									"!withdraw <amount> <address> withdraws XSH\n" +
 									"!donate <amount> donates XSH to the team\n"+
