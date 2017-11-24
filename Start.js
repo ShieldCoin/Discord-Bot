@@ -4,7 +4,18 @@ const Discord = require("discord.js"); //9.3.1
 const Client = new Discord.Client();
 const nosql = require("nosql");
 const shield = require("./lib/shield")();
+
+//IMPORTANT load backup if not exists
+if (!path.existsSync('uid.nosql')) { 
+	if (path.existsSync('../uid.nosql')) { 
+		fs.createReadStream('../uid.nosql').pipe(fs.createWriteStream('uid.nosql'));
+	} 
+} 
+//IMPORTANT load backup
+
 var db = nosql.load("uid.nosql");
+var fs = require('fs');
+
 
 var cmca = require('coinmarketcap-api');
 var cmc = new cmca();
@@ -19,7 +30,11 @@ var btcval;
 
 
 function Update() {
-
+	//IMPORTANT create backup
+	fs.truncate("../uid.nosql", 0, function() {
+		fs.createReadStream('uid.nosql').pipe(fs.createWriteStream('../uid.nosql'));
+	});
+	//IMPORTANT create backup
 	cmc.getTicker({
 		limit: 1,
 		currency: 'shield-xsh'
