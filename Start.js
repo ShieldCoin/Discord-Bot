@@ -26,7 +26,7 @@ function Update() {
 	}).then(x => {
 		jsonf = x;
 	}).catch(console.error);
-		cmc.getTicker({
+	cmc.getTicker({
 		limit: 1,
 		currency: 'bitcoin'
 	}).then(x => {
@@ -197,7 +197,7 @@ function SendMsg(MessageClass, MessageString){
 			ToDelMsg.delete();
 		}
 	}).catch( x =>{
-		console.log("Coulnd't send message");
+		console.log("Couldn't send message.");
 	})
 	
 }
@@ -208,7 +208,7 @@ GetBalance("MainAddr").then(balance => {
 	AddNewUser("MainAddr").then(x => {
 		console.log("MainAddr address is: " + x);
 	}).catch(x => {
-		console.log("Couln't make address", err);
+		console.log("Couldn't make address.", err);
 	});
 	console.log(x);
 });
@@ -234,7 +234,7 @@ Client.on("message", Message => {
 	if (Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
 			//console.log(jsonf);
 			var jsons = jsonf[0];
-			SendMsg(Message, "XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: " + (jsons["24h_volume_usd"]/btcval).toFixed(4) + "BTC || Rank: " + jsons["rank"] );
+			SendMsg(Message, "XSH || " + jsons["price_btc"] + " BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h vol: " + (jsons["24h_volume_usd"]/btcval).toFixed(4) + " BTC || CMC Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
 	}
 
@@ -255,7 +255,7 @@ Client.on("message", Message => {
 			GetBalance("MainAddr").then(Mainbalance => {
 				if (balance >= 50) {
 					if (RandomNumber() > 0.51) {
-						SendMsg(Message,"Chance! you win 50XSH");
+						SendMsg(Message,"Nice! You win 50 XSH!");
 						UpdateBalance(Message.author.id, balance + 50);
 						UpdateBalance("MainAddr", Mainbalance - 50);
 					} else {
@@ -264,19 +264,21 @@ Client.on("message", Message => {
 						UpdateBalance("MainAddr", Mainbalance + 50);
 					}
 				} else {
-					SendMsg(Message,"Not enough balance (50XSH needed)");
+					//value for remaining required XSH (50 - balance) was not truncated.
+					//use the Math.ceil function
+					SendMsg(Message,"Balance insufficient. (you need " + String(Math.ceil((50 - balance) * 1000) / 1000) + " more XSH)");
 				}
 			});
 		}).catch(x =>{
-			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"Your XSH balance is empty. (Hint: use `!deposit`)");
 		});
 	}
 
 	if (Message.content.toLowerCase().startsWith("!balance")) {
 		GetBalance(Message.author.id).then(x =>{
-			SendMsg(Message,"You have: " + String(x) + "XSH");
+			SendMsg(Message,"You have: " + String(x) + " XSH");
 		}).catch(x=>{
-			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"Your XSH balance is empty. (Hint: use `!deposit`)");
 		});
 	}
 
@@ -284,11 +286,11 @@ Client.on("message", Message => {
 	if(Message.content.toLowerCase().startsWith("!donate")){
 		var amount = Number(Message.content.split(" ")[1]);
 		if (amount == undefined || isNaN(amount)) {
-			SendMsg(Message,"Use !donate <amount>");
+			SendMsg(Message,"Please use `!donate <amount>`");
 			return;
 		}
-		if(amount < 1){
-			SendMsg(Message,"Smart ass");
+		if(amount <= 0){
+			SendMsg(Message,"Smart ass >_>");
 			return;
 		}
 		GetBalance(Message.author.id).then(balance => {
@@ -298,14 +300,14 @@ Client.on("message", Message => {
 			UpdateBalance("MainAddr", Mainbalance + amount);
 
 				if (amount > 100000) {
-					SendMsg(Message,"Thanks your the donation you can now choose a custom title");
+					SendMsg(Message,"Thank you so much for your donation! You may choose a custom colour and title.");
 					return;
 				}else{
-					SendMsg(Message,"Thanks for the donation.");
+					SendMsg(Message,"Thanks for the donation!");
 				}
 			});
 		}).catch(x =>{
-			SendMsg(Message,"You haven't deposited any XSH yet (Hint: use `!deposit`)");
+			SendMsg(Message,"Your XSH balance is empty. (Hint: use `!deposit`)");
 		});
 	}
 
@@ -315,18 +317,18 @@ Client.on("message", Message => {
 			var address = Message.content.split(" ")[2];
 
 			if (amount == undefined || isNaN(amount)) {
-				SendMsg(Message,"Use !withdraw <amount> <address>");
+				SendMsg(Message,"Please use `!withdraw <amount> <address>`");
 				return;
 			}
 
 			WithdrawBalance(Message.author.id, address, amount).then(x => {
-				SendMsg(Message,"Succesfully withdrawed " + String(x));
+				SendMsg(Message,"You successfully withdrew " + String(x));
 			}).catch(x => {
-				SendMsg(Message,"Failed to withdraw funds");
+				SendMsg(Message,"Failed to withdraw funds.");
 				console.log(x);
 			});
 		}else{
-			SendMsg(Message,"Use !withdraw <amount> <address>");
+			SendMsg(Message,"Please use `!withdraw <amount> <address>`");
 		}
 	}
 	if (Message.content.toLowerCase().startsWith("!hashprofit")) {
@@ -335,12 +337,13 @@ Client.on("message", Message => {
 			var algo = String(Message.content.split(" ")[2]).toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
-				SendMsg(Message,"Use !hashprofit <hashrate in Mh> <algo>");
+				SendMsg(Message,"Please use `!hashprofit <hashrate in MH/s> <algo>`");
 				return;
 			}
 
 			if(algos.indexOf(algo) < 0){
-				SendMsg(Message,"Choose on of the algo's scrypt, groestl, lyra2re, blake, x17");
+				SendMsg(Message,"**Unrecognised algo.** Please choose one of the following:\n" +
+								"`scrypt, groestl, lyra2re, blake, x17`");
 				return;
 			}
 
@@ -354,23 +357,23 @@ Client.on("message", Message => {
 				XSHph = (1000000 * amount * 250 * 3600)/(getinfo["difficulty_" + algo] * 4294967296);//current block reward
 				var jsons = jsonf[0];
 				var pXSH = jsons["price_usd"];
-				SendMsg(Message,"Estimated: " + String((XSHph).toFixed(2)) +" XSH/h || " + String((XSHph* 24).toFixed(2)) +" XSH/d || "+
-															String((XSHph * pXSH).toFixed(2)) + " $/h || " +  String((XSHph * pXSH * 24).toFixed(2)) + " $/d");
+				SendMsg(Message,"(estimated) Hourly: " + String((XSHph).toFixed(2)) +" XSH ($" + String((XSHph * pXSH).toFixed(2)) + ") || Daily:" +
+				String((XSHph* 24).toFixed(2)) +" XSH ($" +  String((XSHph * pXSH * 24).toFixed(2)) + ")");
 				return;
 			});
 		}else{
-			SendMsg(Message,"Use !hashprofit <hashrate in Mh> <algo>");
+			SendMsg(Message,"Please use `!hashprofit <hashrate in MH/s> <algo>`");
 		}
 	}
 
 	if (Message.content.toLowerCase().startsWith("!help")) {
-					SendMsg(Message,"!info shows the latest data on XSH\n" +
-									"!deposit gets your deposit address\n" +
-									"!withdraw <amount> <address> withdraws XSH\n" +
-									"!donate <amount> donates XSH to the team\n"+
-									"!balance shows you balance\n"+
-									"!chance play's chance can win or lose 50XSH\n"+ 
-									"!hashprofit <Hashrate in Mh> <algo> profit per algo/hashrate");
+					SendMsg(Message,"`!info` View current XSH trading statistics.\n" +
+									"`!deposit` Receive your unique XSH deposit address.\n" +
+									"`!balance` View your current XSH balance.\n"+
+									"`!withdraw <amount> <address>` Withdraw an amount of your XSH to another XSH address (-0.05 network fee).\n" +
+									"`!donate <amount>` Donates an amount of XSH to the team.\n"+
+									"`!chance` Try your luck! You can win or lose 50 XSH.\n"+ 
+									"`!hashprofit <hashrate in MH/s> <algo>` Estimate earnings for a given hashrate on one of XSH's algos.");
 	}
 });
 
