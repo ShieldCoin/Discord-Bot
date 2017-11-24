@@ -15,6 +15,7 @@ var collectorAddr = "SHIELDADDRESS"; //must be on the same wallet
 shield.auth('Macintyre, John', 'mypassword');
 
 var jsonf;
+var btcval;
 
 cmc.getTicker({
 	limit: 1,
@@ -30,6 +31,12 @@ function Update() {
 		currency: 'shield-xsh'
 	}).then(x => {
 		jsonf = x;
+	}).catch(console.error);
+		cmc.getTicker({
+		limit: 1,
+		currency: 'bitcoin'
+	}).then(x => {
+		btcval = x[0]["price_usd"];
 	}).catch(console.error);
 
 	db.find().make(function (builder) { //Get All users
@@ -231,7 +238,7 @@ Client.on("message", Message => {
 	if (Message.content.toLowerCase().startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
 			//console.log(jsonf);
 			var jsons = jsonf[0];
-			SendMsg(Message, "XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: $" +	jsons["24h_volume_usd"] + " || Rank: " + jsons["rank"] );
+			SendMsg(Message, "XSH || " + jsons["price_btc"] + "BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h Vol: " + (jsons["24h_volume_usd"]/btcval).toFixed(4) + "BTC || Rank: " + jsons["rank"] );
 			info_last = new Date().getTime();
 	}
 
