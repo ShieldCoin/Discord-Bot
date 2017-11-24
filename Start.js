@@ -266,7 +266,7 @@ Client.on("message", Message => {
 				} else {
 					//value for remaining required XSH (50 - balance) was not truncated.
 					//use the Math.ceil function
-					SendMsg(Message,"Balance insufficient. (you need " + String(Math.ceil((50 - balance) * 1000) / 1000) + " more XSH)");
+					SendMsg(Message,"Balance insufficient. (you need " + (50 - balance).toFixed(3).replace(/\.?0*$/,'') + " more XSH)");
 				}
 			});
 		}).catch(x =>{
