@@ -17,12 +17,6 @@ shield.auth('Macintyre, John', 'mypassword');
 var jsonf;
 var btcval;
 
-cmc.getTicker({
-	limit: 1,
-	currency: 'shield-xsh'
-}).then(x => {
-	jsonf = x;
-}).catch(console.error)
 
 function Update() {
 
@@ -64,6 +58,8 @@ function Update() {
 	});
 
 }
+
+Update();
 
 setInterval(Update, 30 * 1000); //every 30 sec
 //FIXME:Round Down when upgrading balances
