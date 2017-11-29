@@ -417,6 +417,7 @@ Client.on("message", Message => {
 	if (content[0] === "!tip") {
 		if (content.length >= 3) {
 			//var factor = mention.length;
+			console.log(mention);
 			var amount = Number(content[2]);
 			var totip = mention[0];
 			if (amount == undefined || isNaN(amount)) {
