@@ -21,7 +21,7 @@ var db = nosql.load("uid.nosql");
 var cmca = require('coinmarketcap-api');
 var cmc = new cmca();
 
-const algos = ["x17", "scrypt", "groestl", "lyra2re", "blake"];
+const algos = ["x17", "scrypt", "myrgr", "lyra2v2", "blake2s"];
 var MessageQueue = [];
 var collectorAddr = "SHIELDADDRESS"; //must be on the same wallet
 shield.auth('Macintyre, John', 'mypassword');
@@ -376,7 +376,7 @@ Client.on("message", Message => {
 			SendMsg(Message, "Please use `!withdraw <amount> <address>`");
 		}
 	}
-	
+
 	if (content.startsWith("!hashprofit")) {
 		if (content.split(" ").Length > 3) {
 			var amount = Number(content.split(" ")[1]);
