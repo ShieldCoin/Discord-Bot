@@ -252,6 +252,8 @@ Client.on("message", Message => {
 	var content = Message.content.toLowerCase().split(/\s+/);
 	var mention = [];
 
+	console.log(content);
+
 	for (users in Message.mentions.users) {
 		mention.push(Message.mentions.users[users]);
 	}
