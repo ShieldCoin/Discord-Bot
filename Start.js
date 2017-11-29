@@ -427,6 +427,10 @@ Client.on("message", Message => {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
 				return;
 			}
+			if (amount <= 0) {
+				SendMsg(Message, "Smart ass >_>");
+				return;
+			}
 			GetBalance(Message.author.id).then(balance => {
 				GetBalance(totip).then(Mainbalance => {
 
