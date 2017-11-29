@@ -296,7 +296,7 @@ Client.on("message", Message => {
 			GetBalance("MainAddr").then(Mainbalance => {
 				if (balance >= amount) {
 					if (RandomNumber() > 0.51) {
-						SendMsg(Message, "<@" + String(Message.author.id) + ">. Nice! You win 50 XSH!");
+						SendMsg(Message, "<@" + String(Message.author.id) + ">. Nice! You win "+ String(amount) + "XSH!");
 						UpdateBalance(Message.author.id, balance + amount);
 						UpdateBalance("MainAddr", Mainbalance - amount);
 					} else {
@@ -384,6 +384,7 @@ Client.on("message", Message => {
 
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!hashprofit <hashrate in MH/s> <algo>`");
+				console.log(1);
 				return;
 			}
 
@@ -410,6 +411,7 @@ Client.on("message", Message => {
 				return;
 			});
 		} else {
+			console.log(2);
 			SendMsg(Message, "Please use `!hashprofit <hashrate in MH/s> <algo>`");
 		}
 	}
