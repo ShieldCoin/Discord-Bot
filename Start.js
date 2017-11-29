@@ -250,11 +250,7 @@ Client.on("message", Message => {
 		return;
 
 	var content = Message.content.toLowerCase().split(/\s+/);
-	var mention = [];
-
-	for (users in Message.mentions.users) {
-		mention.push(Message.mentions.users[users]);
-	}
+	var mention = Array.from(Message.mentions.users.values());
 
 	if (content[0]  === "!info" && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
 		//console.log(jsonf);
@@ -417,7 +413,6 @@ Client.on("message", Message => {
 	if (content[0] === "!tip") {
 		if (content.length >= 3) {
 			//var factor = mention.length;
-			console.log(mention);
 			var amount = Number(content[2]);
 			var totip = mention[0];
 			if (amount == undefined || isNaN(amount)) {
