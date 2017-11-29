@@ -427,7 +427,7 @@ Client.on("message", Message => {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
 				return;
 			}
-			if (amount <= 0) {
+			if (amount <= 0.001) {
 				SendMsg(Message, "Smart ass >_>");
 				return;
 			}
