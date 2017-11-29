@@ -64,7 +64,7 @@ function Update() {
 									console.log(err);
 								}
 								UpdateBalance(element["uid"], element["balance"] + (inf - element["ActualBalance"])); //add the diff of recieved coins
-								Client.channels.get(382625543993950209).sendMessage("<@" + String(element["uid"]) + "> deposited " + String(inf - element["ActualBalance"]) + "XSH");
+								Client.channels.get("382625543993950209").sendMessage("<@" + String(element["uid"]) + "> deposited " + String(inf - element["ActualBalance"]) + "XSH");
 							});
 
 						});
