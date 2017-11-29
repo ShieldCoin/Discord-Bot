@@ -414,6 +414,10 @@ Client.on("message", Message => {
 		if (content.length >= 3) {
 			//var factor = mention.length;
 			var amount = Number(content[2]);
+			if(mention.length < 1){
+				SendMsg(Message, "Make sure to mention the user you want to !tip (hint: use @username)");
+				return;
+			}
 			var totip = mention[0].id;
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
