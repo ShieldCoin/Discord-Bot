@@ -414,7 +414,7 @@ Client.on("message", Message => {
 		if (content.length >= 3) {
 			//var factor = mention.length;
 			var amount = Number(content[2]);
-			var totip = mention[0];
+			var totip = mention[0].id;
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
 				return;
