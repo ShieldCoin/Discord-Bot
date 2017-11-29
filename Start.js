@@ -361,6 +361,10 @@ Client.on("message", Message => {
 				SendMsg(Message, "Please use `!withdraw <amount> <address>`");
 				return;
 			}
+			if (amount <= 0.001) {
+				SendMsg(Message, "Smart ass >_>");
+				return;
+			}
 
 			WithdrawBalance(Message.author.id, address, amount).then(x => {
 				SendMsg(Message, "<@" + String(Message.author.id) + ">, You successfully withdrew " + String(x));
