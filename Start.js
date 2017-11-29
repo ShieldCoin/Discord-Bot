@@ -419,6 +419,10 @@ Client.on("message", Message => {
 				return;
 			}
 			var totip = mention[0].id;
+			if(totip === Message.author.id){
+				SendMsg(Message, "Stahp it Mikanoshi");
+				return;
+			}
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
 				return;
