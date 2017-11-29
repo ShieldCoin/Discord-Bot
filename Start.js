@@ -252,6 +252,8 @@ Client.on("message", Message => {
 	var content = Message.content.toLowerCase().replace(/\s+/g, ' ');
 	var mention = [];
 
+	console.log(content);
+
 	for (users in Message.mentions.users) {
 		mention.push(Message.mentions.users[users]);
 	}
@@ -357,7 +359,7 @@ Client.on("message", Message => {
 	}
 
 	if (content.startsWith("!withdraw")) {
-		if (content.split(" ").Length > 3) {
+		if (content.split(" ").Length >= 3) {
 			var amount = Number(content.split(" ")[1]);
 			var address = content.split(" ")[2];
 
@@ -378,7 +380,7 @@ Client.on("message", Message => {
 	}
 
 	if (content.startsWith("!hashprofit")) {
-		if (content.split(" ").Length > 3) {
+		if (content.split(" ").Length >= 3) {
 			var amount = Number(content.split(" ")[1]);
 			var algo = String(content.split(" ")[2]).toLowerCase();
 
@@ -415,7 +417,7 @@ Client.on("message", Message => {
 	}
 
 	if (content.startsWith("!tip")) {
-		if (content.split(" ").Length > 3) {
+		if (content.split(" ").Length >= 3) {
 			//var factor = mention.Length;
 			var amount = Number(content.split(" ")[2]);
 			var totip = mention[0];
