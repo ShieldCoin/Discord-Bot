@@ -249,23 +249,21 @@ Client.on("message", Message => {
 	if (Message.author.bot)
 		return;
 
-	var content = Message.content.toLowerCase().replace(/\s+/g, ' ');
+	var content = Message.content.toLowerCase().split(/\s+/);
 	var mention = [];
-
-	console.log(content);
 
 	for (users in Message.mentions.users) {
 		mention.push(Message.mentions.users[users]);
 	}
 
-	if (content.startsWith("!info") && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
+	if (content[0]  === "!info" && new Date().getTime() > info_last + (1000 * 60 * 1) && (Message.channel.type == "text")) { //wait five minutes interval at least
 		//console.log(jsonf);
 		var jsons = jsonf[0];
 		SendMsg(Message, "XSH || " + jsons["price_btc"] + " BTC || $" + jsons["price_usd"] + " || " + jsons["percent_change_24h"] + "% || 24h vol: " + (jsons["24h_volume_usd"] / btcval).toFixed(4) + " BTC || CMC Rank: " + jsons["rank"]);
 		info_last = new Date().getTime();
 	}
 
-	if (content.startsWith("!deposit") && (Message.channel.type == "text")) {
+	if (content[0] === "!deposit" && (Message.channel.type == "text")) {
 		GetFromUID(Message.author.id).then(user => {
 			SendMsg(Message, "<@" + String(Message.author.id) + ">, Your deposit address is:" + user["deposit_address"]);
 		}).catch(err => {
@@ -277,8 +275,8 @@ Client.on("message", Message => {
 	}
 
 	//TODO: custom amount
-	if (content.startsWith("!chance") && (Message.channel.type == "text")) {
-		var amount = Number(content.split(" ")[1]);
+	if (content[0]  === "!chance" && (Message.channel.type == "text")) {
+		var amount = Number(content[1]);
 		if (amount == undefined || isNaN(amount)) {
 			amount = 50; //default
 		}
@@ -317,7 +315,7 @@ Client.on("message", Message => {
 		});
 	}
 
-	if (content.startsWith("!balance")) {
+	if (content[0] === "!balance") {
 		GetBalance(Message.author.id).then(x => {
 			SendMsg(Message, "<@" + String(Message.author.id) + ">, You have: " + String(x) + " XSH");
 		}).catch(x => {
@@ -326,8 +324,8 @@ Client.on("message", Message => {
 	}
 
 
-	if (content.startsWith("!donate")) {
-		var amount = Number(content.split(" ")[1]);
+	if (content[0] === "!donate") {
+		var amount = Number(content[1]);
 		if (amount == undefined || isNaN(amount)) {
 			SendMsg(Message, "Please use `!donate <amount>`");
 			return;
@@ -358,10 +356,10 @@ Client.on("message", Message => {
 		});
 	}
 
-	if (content.startsWith("!withdraw")) {
-		if (content.split(" ").Length >= 3) {
-			var amount = Number(content.split(" ")[1]);
-			var address = content.split(" ")[2];
+	if (content[0] === "!withdraw") {
+		if (content.Length >= 3) {
+			var amount = Number(content[1]);
+			var address = content[2];
 
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!withdraw <amount> <address>`");
@@ -379,10 +377,10 @@ Client.on("message", Message => {
 		}
 	}
 
-	if (content.startsWith("!hashprofit")) {
-		if (content.split(" ").Length >= 3) {
-			var amount = Number(content.split(" ")[1]);
-			var algo = String(content.split(" ")[2]).toLowerCase();
+	if (content[0] === "!hashprofit") {
+		if (content.Length >= 3) {
+			var amount = Number(content[1]);
+			var algo = String(content[2]).toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!hashprofit <hashrate in MH/s> <algo>`");
@@ -416,10 +414,10 @@ Client.on("message", Message => {
 		}
 	}
 
-	if (content.startsWith("!tip")) {
-		if (content.split(" ").Length >= 3) {
+	if (content[0] === "!tip") {
+		if (content.Length >= 3) {
 			//var factor = mention.Length;
-			var amount = Number(content.split(" ")[2]);
+			var amount = Number(content[2]);
 			var totip = mention[0];
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!tip <Person> <amount>`");
@@ -446,7 +444,7 @@ Client.on("message", Message => {
 		}
 	}
 
-	if (content.startsWith("!help")) {
+	if (content[0] === "!help") {
 		SendMsg(Message, "`!info` View current XSH trading statistics.\n" +
 			"`!deposit` Receive your unique XSH deposit address.\n" +
 			"`!balance` View your current XSH balance.\n" +
