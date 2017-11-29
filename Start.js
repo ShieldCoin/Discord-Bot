@@ -210,7 +210,7 @@ function AddNewUser(uid) {
 function SendMsg(MessageClass, MessageString) {
 	MessageClass.channel.sendMessage(MessageString).then(msg => {
 		MessageQueue.unshift(msg);
-		if (MessageQueue.Length > 5) {
+		if (MessageQueue.length > 5) {
 			var ToDelMsg = MessageQueue[4].delete();
 			MessageQueue.pop();
 		}
@@ -251,8 +251,6 @@ Client.on("message", Message => {
 
 	var content = Message.content.toLowerCase().split(/\s+/);
 	var mention = [];
-
-	console.log(content);
 
 	for (users in Message.mentions.users) {
 		mention.push(Message.mentions.users[users]);
@@ -359,7 +357,7 @@ Client.on("message", Message => {
 	}
 
 	if (content[0] === "!withdraw") {
-		if (content.Length >= 3) {
+		if (content.length >= 3) {
 			var amount = Number(content[1]);
 			var address = content[2];
 
@@ -380,13 +378,12 @@ Client.on("message", Message => {
 	}
 
 	if (content[0] === "!hashprofit") {
-		if (content.Length >= 3) {
+		if (content.length >= 3) {
 			var amount = Number(content[1]);
 			var algo = String(content[2]).toLowerCase();
 
 			if (amount == undefined || isNaN(amount)) {
 				SendMsg(Message, "Please use `!hashprofit <hashrate in MH/s> <algo>`");
-				console.log(1);
 				return;
 			}
 
@@ -413,14 +410,13 @@ Client.on("message", Message => {
 				return;
 			});
 		} else {
-			console.log(2);
 			SendMsg(Message, "Please use `!hashprofit <hashrate in MH/s> <algo>`");
 		}
 	}
 
 	if (content[0] === "!tip") {
-		if (content.Length >= 3) {
-			//var factor = mention.Length;
+		if (content.length >= 3) {
+			//var factor = mention.length;
 			var amount = Number(content[2]);
 			var totip = mention[0];
 			if (amount == undefined || isNaN(amount)) {
