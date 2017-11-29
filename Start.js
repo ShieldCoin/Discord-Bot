@@ -361,7 +361,7 @@ Client.on("message", Message => {
 				SendMsg(Message, "Please use `!withdraw <amount> <address>`");
 				return;
 			}
-			if (amount <= 0.5) {
+			if (amount <= 1) {
 				SendMsg(Message, "Please withdraw higher than 1 XSH");
 				return;
 			}
