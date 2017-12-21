@@ -113,7 +113,7 @@ function GetFromUID (uid) {
           reject(err)
         } else {
           if (response === undefined) {
-            reject(new Error(0))
+            reject("can't find user")
           }
           resolve(response)
         }
@@ -166,7 +166,7 @@ function WithdrawBalance (uid, address, amount) {
           resolve(txid)
         })
       } else {
-        reject(new Error('`not enough balance`'))
+        reject('`not enough balance`')
       }
     }).catch(err => {
       reject(err)
