@@ -268,8 +268,8 @@ Client.on('message', Message => {
     })
   }
 
-  if (content[0] === '!checkinput' && (Message.author.id === '262251841343979520')) {
-    SendMsg(Message, JSON.stringify(mention) + JSON.stringify(content))
+  if (content[0] === '!checkinput' && String(Message.author.id) === '262251841343979520') {
+    SendMsg(Message, JSON.stringify(mention[0]) + JSON.stringify(content))
     return
   }
 
