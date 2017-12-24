@@ -268,23 +268,24 @@ Client.on('message', Message => {
     })
   }
 
-  if (content[0] === '!admin checkinput' && String(Message.author.id) === '262251841343979520') {
-    SendMsg(Message, JSON.stringify(mention[0]) + JSON.stringify(content))
-    return
-  }
+  if (content[0] === '!admin' && String(Message.author.id) === '262251841343979520') {
+    if (content[1] === 'checkinput') {
+      SendMsg(Message, JSON.stringify(mention[0]) + JSON.stringify(content))
+    }
 
-  if (content[0] === '!admin generateuser' && String(Message.author.id) === '262251841343979520') {
-    if (mention[0]) {
-      GetFromUID(mention[0].id).then(user => {
-        SendMsg(Message, '<@' + String(mention[0].id) + '>, Your deposit address is:' + user['deposit_address'])
-      }).catch(err => {
-        console.log(err)
-        AddNewUser(mention[0].id).then(addr => {
-          SendMsg(Message, '<@' + String(mention[0].id) + '>, Your deposit address is: ' + addr)
+    if (content[1] === 'generateuser') {
+      if (mention[0]) {
+        GetFromUID(mention[0].id).then(user => {
+          SendMsg(Message, '<@' + String(mention[0].id) + '>, Your deposit address is:' + user['deposit_address'])
+        }).catch(err => {
+          console.log(err)
+          AddNewUser(mention[0].id).then(addr => {
+            SendMsg(Message, '<@' + String(mention[0].id) + '>, Your deposit address is: ' + addr)
+          })
         })
-      })
-    } else {
-      SendMsg(Message, "Didn't mention user")
+      } else {
+        SendMsg(Message, "Didn't mention user")
+      }
     }
     return
   }
