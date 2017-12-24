@@ -270,7 +270,7 @@ Client.on('message', Message => {
 
   if (content[0] === '!admin' && String(Message.author.id) === '262251841343979520') {
     if (content[1] === 'checkinput') {
-      SendMsg(Message, JSON.stringify(mention[0]) + JSON.stringify(content))
+      SendMsg(Message, JSON.stringify(mention[0].id) + JSON.stringify(content))
     }
 
     if (content[1] === 'generateuser') {
