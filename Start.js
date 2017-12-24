@@ -157,6 +157,7 @@ function WithdrawBalance (uid, address, amount) {
         shield.exec('sendToAddress', address, amount, function (err, txid) {
           if (err) {
             reject(err)
+            return
           }
           GetBalance(uid).then(balance => {
             GetBalance('MainAddr').then(Mainbalance => {
