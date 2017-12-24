@@ -344,7 +344,7 @@ Client.on('message', Message => {
   if (content[0] === '!withdraw') {
     if (content.length >= 3) {
       var amount = Number(content[1])
-      var address = content[2]
+      var address = Message.content.split(/\s+/)[2]
 
       if (amount === undefined || isNaN(amount)) {
         SendMsg(Message, 'Please use `!withdraw <amount> <address>`')
