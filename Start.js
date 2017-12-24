@@ -8,10 +8,8 @@ var fs = require('fs')
 var request = require('request')
 
 // IMPORTANT load backup if not exists
-if (!fs.existsSync('uid.nosql')) {
-  if (fs.existsSync('../uid.nosql')) {
-    fs.createReadStream('../uid.nosql').pipe(fs.createWriteStream('uid.nosql'))
-  }
+if (fs.existsSync('../uid.nosql')) {
+  fs.createReadStream('../uid.nosql').pipe(fs.createWriteStream('uid.nosql'))
 }
 // IMPORTANT load backup
 
@@ -82,6 +80,12 @@ function Update () {
 Update()
 
 setInterval(Update, 30 * 1000) // every 30 sec
+setInterval(() => {
+  // Safety back up, less often so it's not as easily overwriten
+  fs.truncate('../../uid.nosql', 0, function () {
+    fs.createReadStream('uid.nosql').pipe(fs.createWriteStream('../../uid.nosql'))
+  })
+}, 5 * 60 * 1000)
 // FIXME:Round Down when upgrading balances
 function GetNewAddress () {
   return new Promise(function (resolve, reject) {
