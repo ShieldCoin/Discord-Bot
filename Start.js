@@ -27,11 +27,11 @@ var jsonf
 var btcval
 
 function Update () {
-	// IMPORTANT create backup
+  // IMPORTANT create backup
   fs.truncate('../uid.nosql', 0, function () {
     fs.createReadStream('uid.nosql').pipe(fs.createWriteStream('../uid.nosql'))
   })
-	// IMPORTANT create backup
+  // IMPORTANT create backup
   cmc.getTicker({
     limit: 1,
     currency: 'shield-xsh'
@@ -266,6 +266,11 @@ Client.on('message', Message => {
         SendMsg(Message, '<@' + String(Message.author.id) + '>, Your deposit address is: ' + addr)
       })
     })
+  }
+
+  if (content[0] === '!checkinput' && (Message.author.id === '262251841343979520')) {
+    SendMsg(Message, JSON.stringify(mention) + JSON.stringify(content))
+    return
   }
 
   if (content[0] === '!chance' && (Message.channel.type === 'text')) {
