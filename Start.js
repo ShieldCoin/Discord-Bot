@@ -483,3 +483,9 @@ Client.on('message', Message => {
 })
 
 Client.login('TOKEN')
+
+process.on('uncaughtException', function (err) {
+  console.error((new Date()).toUTCString() + ' uncaughtException:', err.message)
+  console.error(err.stack)
+  process.exit(1)
+})
